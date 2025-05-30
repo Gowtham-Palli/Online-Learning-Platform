@@ -83,6 +83,7 @@ export async function POST() {
 
     const courseId = uuidv4();
     const imagePrompt = json.course.courseBannerImagePrompt;
+    console.log(imagePrompt);
 
     let bannerImageUrl = '';
     try {
@@ -107,21 +108,22 @@ export async function POST() {
   });
 }
 
-const GenerateImage = async (imagePrompt) => {
-  const response = await axios.post(
-    'https://api-inference.huggingface.co/models/runwayml/stable-diffusion-v1-5',
-    {
-      inputs: imagePrompt,
-    },
-    {
-      headers: {
-        Authorization: `Bearer ${process.env.HUGGINGFACE_API_KEY}`,
-        'Content-Type': 'application/json',
-      },
-      responseType: 'arraybuffer',
-    }
-  );
-
-  const base64Image = Buffer.from(response.data, 'binary').toString('base64');
-  return `data:image/png;base64,${base64Image}`;
-};
+const GenerateImage = async(imagePrompt) => {
+    const BASE_URL = 'https://aigurulab.tech';
+    const result = await axios.post(BASE_URL + '/api/generate-image',
+        {
+            // width: 1024,
+            // height: 1024,
+            input: imagePrompt,
+            model: 'flux',//'flux'
+            aspectRatio: "16:9"//Applicable to Flux model only
+        },
+        {
+            headers: {
+                'x-api-key': process?.env?.AI_GURU_LAB_API, // Your API Key
+                'Content-Type': 'application/json', // Content Type
+            },
+        })
+    console.log(result.data.image) //Output Result: Base 64 Image
+    return result.data.image;
+}
