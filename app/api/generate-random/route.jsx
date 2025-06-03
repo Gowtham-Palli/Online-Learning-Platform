@@ -108,22 +108,38 @@ export async function POST() {
   });
 }
 
-const GenerateImage = async(imagePrompt) => {
-    const BASE_URL = 'https://aigurulab.tech';
-    const result = await axios.post(BASE_URL + '/api/generate-image',
-        {
-            // width: 1024,
-            // height: 1024,
-            input: imagePrompt,
-            model: 'flux',//'flux'
-            aspectRatio: "16:9"//Applicable to Flux model only
-        },
-        {
-            headers: {
-                'x-api-key': process?.env?.AI_GURU_LAB_API, // Your API Key
-                'Content-Type': 'application/json', // Content Type
+const GenerateImage = async (imagePrompt) => {
+    const API_URL = "https://api.replicate.com/v1/predictions"; // Stable Diffusion API endpoint
+    const API_KEY = process.env.REPLICATE_API_KEY; // Use your API key
+
+    try {
+        const response = await axios.post(
+            API_URL,
+            {
+                version: "stabilityai/stable-diffusion",
+                input: { prompt: imagePrompt }
             },
-        })
-    console.log(result.data.image) //Output Result: Base 64 Image
-    return result.data.image;
-}
+            {
+                headers: {
+                    "Authorization": `Token ${API_KEY}`,
+                    "Content-Type": "application/json"
+                }
+            }
+        );
+
+        // Wait for the image generation to complete
+        let imageUrl = "";
+        while (!imageUrl) {
+            const checkStatus = await axios.get(response.data.urls.get, {
+                headers: { "Authorization": `Token ${API_KEY}` }
+            });
+            imageUrl = checkStatus.data.output ? checkStatus.data.output[0] : "";
+        }
+
+        console.log("Generated Image URL:", imageUrl);
+        return imageUrl;
+    } catch (err) {
+        console.warn("Stable Diffusion image generation failed:", err?.message || err);
+        return "";
+    }
+};

@@ -82,22 +82,47 @@ export async function POST(req) {
 }
 
 
-const GenerateImage = async(imagePrompt) => {
-    const BASE_URL = 'https://aigurulab.tech';
-    const result = await axios.post(BASE_URL + '/api/generate-image',
-        {
-            // width: 1024,
-            // height: 1024,
-            input: imagePrompt,
-            model: 'flux',//'flux'
-            aspectRatio: "16:9"//Applicable to Flux model only
-        },
-        {
-            headers: {
-                'x-api-key': process?.env?.AI_GURU_LAB_API, // Your API Key
-                'Content-Type': 'application/json', // Content Type
-            },
-        })
-    console.log(result.data.image) //Output Result: Base 64 Image
-    return result.data.image;
-}
+const GenerateImage = async (imagePrompt) => {
+  const API_URL = "https://api.replicate.com/v1/predictions";
+  const API_KEY = process.env.REPLICATE_API_KEY;
+
+  try {
+    const prediction = await axios.post(API_URL,
+      {
+        version: "ac732df83cea7fff18b8472768c88ad041fa750ff7682a21affe81863cbe77e4", // ✅ CORRECT version
+        input: { prompt: imagePrompt }
+      },
+      {
+        headers: {
+          "Authorization": `Token ${API_KEY}`,
+          "Content-Type": "application/json"
+        }
+      });
+
+    if (prediction.status !== 201) throw new Error("Failed to start image generation.");
+
+    let imageUrl = "";
+    const delay = ms => new Promise(res => setTimeout(res, ms));
+    for (let i = 0; i < 10; i++) {
+      await delay(1500);
+      const statusRes = await axios.get(prediction.data.urls.get, {
+        headers: { "Authorization": `Token ${API_KEY}` }
+      });
+
+      const output = statusRes.data.output;
+      if (output) {
+        imageUrl = Array.isArray(output) ? output[0] : output;
+        break;
+      }
+    }
+
+    if (!imageUrl) {
+      console.warn("Image generation timed out or failed.");
+    }
+
+    return imageUrl;
+  } catch (err) {
+    console.error("Image generation error:", err?.message || err);
+    return "";
+  }
+};
