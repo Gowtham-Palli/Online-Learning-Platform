@@ -1,12 +1,13 @@
-import { Geist, Geist_Mono } from "next/font/google";
+import { Roboto, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import Provider from "./provider";
 import { Toaster } from "@/components/ui/sonner";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const roboto = Roboto({
+  variable: "--font-roboto",
   subsets: ["latin"],
+  weight: ["400", "700"], // include weights you want
 });
 
 const geistMono = Geist_Mono({
@@ -24,7 +25,8 @@ export default function RootLayout({ children }) {
     <ClerkProvider>
       <html lang="en">
         <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+          className={`${roboto.variable} ${geistMono.variable} antialiased`}
+          style={{ fontFamily: 'var(--font-roboto), sans-serif' }}
         >
           <Provider>
             {children}

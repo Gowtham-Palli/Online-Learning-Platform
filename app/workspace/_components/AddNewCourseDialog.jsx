@@ -97,39 +97,42 @@ const AddNewCourseDialog = ({ children }) => {
                     <DialogTitle>Create Your Course Using AI</DialogTitle>
                     <DialogDescription asChild>
                         <div className="flex flex-col gap-3 mt-2">
-                            <div className="flex flex-col gap-1 text-gray-700">
-                                <label>Course Name</label>
+                            <div className="flex flex-col gap-1 ">
+                                <label className='text-gray-700 font-semibold'>Course Name</label>
                                 <Input
                                     placeholder="Course Name"
                                     value={formData.name}
                                     onChange={e => onHandleInputChange('name', e.target.value)}
+                                    className={"bg-slate-800 text-blue-300"}
                                 />
                             </div>
-                            <div className="flex flex-col gap-1 text-gray-700">
-                                <label>Course Description (Optional)</label>
+                            <div className="flex flex-col gap-1">
+                                <label className='text-gray-700 font-semibold'>Course Description (Optional)</label>
                                 <Textarea
                                     placeholder="Course Description"
                                     value={formData.description}
                                     onChange={e => onHandleInputChange('description', e.target.value)}
+                                    className={"bg-slate-800 text-blue-300"}
                                 />
                             </div>
-                            <div className="flex flex-col gap-1 text-gray-700">
-                                <label>No. of Chapters</label>
+                            <div className="flex flex-col gap-1">
+                                <label className='text-gray-700 font-semibold'>No. of Chapters</label>
                                 <Input
                                     type="number"
                                     value={Number.isNaN(formData.noOfChapters) ? '' : formData.noOfChapters}
                                     onChange={e => onHandleInputChange('noOfChapters', e.target.value)}
+                                    className={"bg-slate-800 text-blue-300"}
                                 />
                             </div>
                             <div className="flex items-center gap-3">
-                                <label>Include Video</label>
+                                <label className='text-gray-700 font-semibold'>Include Video</label>
                                 <Switch
                                     checked={formData.includeVideo}
                                     onCheckedChange={checked => onHandleInputChange('includeVideo', checked)}
                                 />
                             </div>
-                            <div className="flex flex-col gap-1 text-gray-700">
-                                <label>Difficulty Level</label>
+                            <div className="flex flex-col gap-1">
+                                <label className='text-gray-700 font-semibold'>Difficulty Level</label>
                                 <Select
                                     value={formData.level}
                                     onValueChange={value => onHandleInputChange('level', value)}
@@ -144,12 +147,13 @@ const AddNewCourseDialog = ({ children }) => {
                                     </SelectContent>
                                 </Select>
                             </div>
-                            <div className="flex flex-col gap-1 text-gray-700">
-                                <label>Category</label>
+                            <div className="flex flex-col gap-1">
+                                <label className='text-gray-700 font-semibold'>Category</label>
                                 <Input
                                     placeholder="Category (Separated by comma)"
                                     value={formData.category}
                                     onChange={e => onHandleInputChange('category', e.target.value)}
+                                    className={"bg-slate-800 text-blue-300"}
                                 />
                             </div>
 
@@ -162,8 +166,8 @@ const AddNewCourseDialog = ({ children }) => {
                             </div>
                             {/* Show image upload only if AI generation failed */}
                             {showImageUpload && (
-                                <div className="mt-5 flex flex-col gap-1 text-gray-700">
-                                    <label>Please upload a banner image</label>
+                                <div className="mt-5 flex flex-col gap-1">
+                                    <label className='text-gray-700 font-semibold'>Please upload a banner image</label>
                                     <ImageUploader onImageUploaded={onManualImageUpload} />
                                 </div>
                             )}

@@ -33,14 +33,23 @@ const ImageUploader = ({ onImageUploaded }) => {
 
   return (
     <div className="flex flex-col gap-2">
-      <input
-        type="file"
-        accept="image/*"
-        onChange={handleFileChange}
-        disabled={uploading}
-      />
-      {uploading && <p className="text-sm text-muted-foreground">Uploading...</p>}
+      <label className="inline-block w-fit px-4 py-2 bg-slate-600 text-white rounded cursor-pointer hover:bg-slate-700">
+        Choose File
+        <input
+          type="file"
+          accept="image/*"
+          onChange={handleFileChange}
+          disabled={uploading}
+          className="hidden"
+        />
+      </label>
+
+      {uploading && (
+        <p className="text-sm text-muted-foreground">Uploading...</p>
+      )}
     </div>
+
+
   );
 };
 
