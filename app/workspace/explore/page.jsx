@@ -22,8 +22,8 @@ const Explore = () => {
   return (
     <div>
       <h2 className='text-white text-2xl'>Explore more courses</h2>
-        <Button onClick={onGenerate}>{loading?<LoaderCircleIcon className={'animate-spin'}/>:<Settings/>}
-        Generate Random Course</Button>
+        {/* <Button onClick={onGenerate}>{loading?<LoaderCircleIcon className={'animate-spin'}/>:<Settings/>}
+        Generate Random Course</Button> */}
     </div>
   )
 }
