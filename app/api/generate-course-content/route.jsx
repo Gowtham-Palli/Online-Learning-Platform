@@ -59,11 +59,13 @@ export async function POST(req) {
         }, AI_RETRY_CONFIG);
 
         const rawText = response?.candidates?.[0]?.content?.parts?.[0]?.text || '';
-        const cleanedText = rawText
-          .replace(/```(?:json)?/gi, '') // removes ```json or ```
-          .replace(/[\u2018\u2019]/g, "'") // curly single quotes to straight
-          .replace(/[\u201C\u201D]/g, '"') // curly double quotes to straight
-          .trim();
+        const cleanedText = rawText;
+        if (cleanedText.startsWith("```json")) {
+          cleanedText = cleanedText.replace("```json", "").trim();
+        }
+        if (cleanedText.endsWith("```")) {
+          cleanedText = cleanedText.replace(/```$/, "").trim();
+        }
 
         try {
           JSONResp = JSON5.parse(cleanedText);
